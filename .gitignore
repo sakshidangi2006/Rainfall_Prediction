@@ -19,7 +19,6 @@ data/processed/*
 
 # Trained models
 models/*.pkl
-models/*.joblib
 
 # OS files
 .DS_Store
