@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Prediction | ML Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main class="container">
+
+    <!-- Header -->
+    <section class="hero">
+        <div class="hero-icon">🌧️</div>
+        <h1>Rainfall Prediction</h1>
+        <p>
+            Predict next year's annual rainfall using historical
+            rainfall patterns from the previous five years.
+        </p>
+    </section>
+
+    <!-- Prediction Card -->
+    <section class="prediction-card">
+
+        <div class="section-header">
+            <h2>Enter Historical Rainfall</h2>
+            <p>
+                Enter annual rainfall values in millimeters (mm) in chronological order.
+            </p>
+        </div>
+
+        <div class="inputs">
+
+            <div class="input-group">
+                <label for="year1">
+                    Most Recent Year (Lag 1)
+                </label>
+                <input
+                    type="number"
+                    id="year1"
+                    step="0.01"
+                    min="0"
+                    placeholder="3374.90"
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="year2">
+                    2 Years Ago (Lag 2)
+                </label>
+                <input
+                    type="number"
+                    id="year2"
+                    step="0.01"
+                    min="0"
+                    placeholder="2748.20"
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="year3">
+                    3 Years Ago (Lag 3)
+                </label>
+                <input
+                    type="number"
+                    id="year3"
+                    step="0.01"
+                    min="0"
+                    placeholder="2404.70"
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="year4">
+                    4 Years Ago (Lag 4)
+                </label>
+                <input
+                    type="number"
+                    id="year4"
+                    step="0.01"
+                    min="0"
+                    placeholder="2954.50"
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="year5">
+                    5 Years Ago (Lag 5)
+                </label>
+                <input
+                    type="number"
+                    id="year5"
+                    step="0.01"
+                    min="0"
+                    placeholder="2460.00"
+                >
+            </div>
+
+        </div>
+
+        <button type="button" id="predictButton">
+            Predict Next Year's Rainfall
+        </button>
+
+        <div id="loading" class="loading hidden">
+            ⏳ Calculating prediction...
+        </div>
+
+        <div id="result" class="result hidden">
+            <span class="result-label">
+                Predicted Annual Rainfall
+            </span>
+            <div class="prediction-number">
+                <span id="predictionValue">0</span>
+                <span class="unit">mm</span>
+            </div>
+            <p>
+                Estimated rainfall for the next year
+            </p>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+    </section>
+
+    <!-- Model Information -->
+    <section class="model-section">
+        <h2>Model Information</h2>
+        <p class="model-description">
+            The prediction is generated using a Linear Regression
+            model trained on historical rainfall patterns.
+        </p>
+
+        <div class="metrics">
+            <div class="metric">
+                <span class="metric-value">211.84</span>
+                <span class="metric-label">MAE (mm)</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">289.06</span>
+                <span class="metric-label">RMSE (mm)</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">0.891</span>
+                <span class="metric-label">R² Score</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Rainfall Prediction ML Project</p>
+        <p>Built with Python • Scikit-learn • FastAPI</p>
+    </footer>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
