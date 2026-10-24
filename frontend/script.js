@@ -1,171 +1,133 @@
-console.log("SCRIPT.JS IS LOADED");
+
+const API_URL = "http://127.0.0.1:8000";
 
 const button = document.getElementById("predictButton");
+const subdivisionSelect = document.getElementById("subdivision");
+const loading = document.getElementById("loading");
+const result = document.getElementById("result");
+const error = document.getElementById("error");
+const predictionValue = document.getElementById("predictionValue");
 
-console.log("PREDICT BUTTON:", button);
+// Load the exact subdivisions supported by the trained model.
+async function loadSubdivisions() {
+    try {
+        const response = await fetch(`${API_URL}/subdivisions`);
+
+        if (!response.ok) {
+            throw new Error("Could not load subdivisions.");
+        }
+
+        const data = await response.json();
+
+        subdivisionSelect.replaceChildren(
+            new Option("Select a subdivision", "")
+        );
+
+        data.subdivisions.forEach((name) => {
+            subdivisionSelect.add(new Option(name, name));
+        });
+
+    } catch (err) {
+        console.error("Subdivision loading error:", err);
+
+        subdivisionSelect.replaceChildren(
+            new Option("Unable to load subdivisions", "")
+        );
+
+        error.textContent =
+            "Could not load subdivisions. Check that the API is running.";
+        error.classList.remove("hidden");
+    }
+}
+
+loadSubdivisions();
 
 button.addEventListener("click", async function () {
+    error.classList.add("hidden");
+    result.classList.add("hidden");
 
+    const subdivision = subdivisionSelect.value;
 
-console.log("PREDICT BUTTON CLICKED");
+    if (!subdivision) {
+        error.textContent = "Please select a subdivision.";
+        error.classList.remove("hidden");
+        return;
+    }
 
+    const inputIds = ["year1", "year2", "year3", "year4", "year5"];
+    const values = inputIds.map((id) =>
+        document.getElementById(id).value.trim()
+    );
 
-// Get raw input values first
-const input1 = document.getElementById("year1").value.trim();
-const input2 = document.getElementById("year2").value.trim();
-const input3 = document.getElementById("year3").value.trim();
-const input4 = document.getElementById("year4").value.trim();
-const input5 = document.getElementById("year5").value.trim();
+    if (values.some((value) => value === "")) {
+        error.textContent =
+            "Please enter rainfall values for all five years.";
+        error.classList.remove("hidden");
+        return;
+    }
 
+    const rainfall = values.map(Number);
 
-// Validate empty fields
-if (
-    input1 === "" ||
-    input2 === "" ||
-    input3 === "" ||
-    input4 === "" ||
-    input5 === ""
-) {
+    if (rainfall.some((value) => !Number.isFinite(value) || value < 0)) {
+        error.textContent =
+            "Enter valid, non-negative rainfall values.";
+        error.classList.remove("hidden");
+        return;
+    }
 
-    document.getElementById("error").textContent =
-        "Please enter rainfall values for all five years.";
+    const requestData = {
+        subdivision: subdivision,
+        annual_lag1: rainfall[0],
+        annual_lag2: rainfall[1],
+        annual_lag3: rainfall[2],
+        annual_lag4: rainfall[3],
+        annual_lag5: rainfall[4]
+    };
 
-    document.getElementById("error").classList.remove("hidden");
+    loading.classList.remove("hidden");
+    button.disabled = true;
 
-    document.getElementById("result").classList.add("hidden");
-
-    return;
-}
-
-
-// Convert values to numbers
-const year1 = Number(input1);
-const year2 = Number(input2);
-const year3 = Number(input3);
-const year4 = Number(input4);
-const year5 = Number(input5);
-
-
-// Validate numbers
-if (
-    !Number.isFinite(year1) ||
-    !Number.isFinite(year2) ||
-    !Number.isFinite(year3) ||
-    !Number.isFinite(year4) ||
-    !Number.isFinite(year5)
-) {
-
-    document.getElementById("error").textContent =
-        "Please enter valid rainfall numbers.";
-
-    document.getElementById("error").classList.remove("hidden");
-
-    return;
-}
-
-
-// Rainfall cannot be negative
-if (
-    year1 < 0 ||
-    year2 < 0 ||
-    year3 < 0 ||
-    year4 < 0 ||
-    year5 < 0
-) {
-
-    document.getElementById("error").textContent =
-        "Rainfall values cannot be negative.";
-
-    document.getElementById("error").classList.remove("hidden");
-
-    return;
-}
-
-
-const requestData = {
-
-    annual_lag1: year1,
-    annual_lag2: year2,
-    annual_lag3: year3,
-    annual_lag4: year4,
-    annual_lag5: year5
-
-};
-
-
-console.log("REQUEST DATA:", requestData);
-
-
-document.getElementById("loading").classList.remove("hidden");
-
-document.getElementById("result").classList.add("hidden");
-
-document.getElementById("error").classList.add("hidden");
-
-
-try {
-
-    console.log("CALLING FASTAPI...");
-
-
-    const response = await fetch(
-        "http://127.0.0.1:8000/predict",
-        {
+    try {
+        const response = await fetch(`${API_URL}/predict`, {
             method: "POST",
-
             headers: {
                 "Content-Type": "application/json"
             },
-
             body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const detail = data.detail;
+            throw new Error(
+                typeof detail === "string"
+                    ? detail
+                    : "Prediction request failed."
+            );
         }
-    );
 
-
-    console.log("API STATUS:", response.status);
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            `API returned status ${response.status}`
+        const prediction = Number(
+            data.predicted_next_year_annual_rainfall_mm
         );
 
+        if (!Number.isFinite(prediction)) {
+            throw new Error("The API returned an invalid prediction.");
+        }
+
+        predictionValue.textContent = prediction.toFixed(2);
+        document.getElementById("resultSubdivision").textContent = subdivision;
+        result.classList.remove("hidden");
+
+    } catch (err) {
+        console.error("Prediction error:", err);
+
+        error.textContent =
+            err.message || "Unable to connect to the prediction API.";
+        error.classList.remove("hidden");
+
+    } finally {
+        loading.classList.add("hidden");
+        button.disabled = false;
     }
-
-
-    const data = await response.json();
-
-
-    console.log("API RESPONSE:", data);
-
-
-    const prediction =
-        Number(data.predicted_annual_rainfall_mm);
-
-
-    document.getElementById("predictionValue").textContent =
-        prediction.toFixed(2);
-
-
-    document.getElementById("result").classList.remove("hidden");
-
-
-} catch (error) {
-
-    console.error("API ERROR:", error);
-
-
-    document.getElementById("error").textContent =
-        "Unable to connect to the prediction API.";
-
-    document.getElementById("error").classList.remove("hidden");
-
-
-} finally {
-
-    document.getElementById("loading").classList.add("hidden");
-
-}
-
 });

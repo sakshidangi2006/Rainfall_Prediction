@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rainfall Prediction | ML Application</title>
+    <title>Regional Rainfall Prediction | ML Application</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,91 +13,69 @@
 
 <main class="container">
 
-    <!-- Header -->
     <section class="hero">
         <div class="hero-icon">🌧️</div>
-        <h1>Rainfall Prediction</h1>
+        <h1>Regional Rainfall Prediction</h1>
         <p>
-            Predict next year's annual rainfall using historical
-            rainfall patterns from the previous five years.
+            Predict next year's annual rainfall using the selected
+            meteorological subdivision and historical rainfall data.
         </p>
     </section>
 
-    <!-- Prediction Card -->
     <section class="prediction-card">
 
         <div class="section-header">
-            <h2>Enter Historical Rainfall</h2>
+            <h2>Enter Your Rainfall Details</h2>
             <p>
-                Enter annual rainfall values in millimeters (mm) in chronological order.
+                Select a region and enter annual rainfall for the
+                previous five years in millimeters (mm).
             </p>
         </div>
 
+        <!-- Subdivision selection -->
+        <div class="input-group">
+            <label for="subdivision">Select Meteorological Subdivision</label>
+            
+                <select id="subdivision" required>
+                    <option value="" disabled selected>
+                        Loading subdivisions...
+                    </option>
+                </select>
+
+            <small>Select the region for which you want a prediction.</small>
+        </div>
+
+        <!-- Historical rainfall inputs -->
         <div class="inputs">
 
             <div class="input-group">
-                <label for="year1">
-                    Most Recent Year (Lag 1)
-                </label>
-                <input
-                    type="number"
-                    id="year1"
-                    step="0.01"
-                    min="0"
-                    placeholder="3374.90"
-                >
+                <label for="year1">Most Recent Year (Lag 1)</label>
+                <input type="number" id="year1" step="0.01"
+                       min="0" placeholder="3000.00" required>
             </div>
 
             <div class="input-group">
-                <label for="year2">
-                    2 Years Ago (Lag 2)
-                </label>
-                <input
-                    type="number"
-                    id="year2"
-                    step="0.01"
-                    min="0"
-                    placeholder="2748.20"
-                >
+                <label for="year2">2 Years Ago (Lag 2)</label>
+                <input type="number" id="year2" step="0.01"
+                       min="0" placeholder="2800.00" required>
             </div>
 
             <div class="input-group">
-                <label for="year3">
-                    3 Years Ago (Lag 3)
-                </label>
-                <input
-                    type="number"
-                    id="year3"
-                    step="0.01"
-                    min="0"
-                    placeholder="2404.70"
-                >
+                <label for="year3">3 Years Ago (Lag 3)</label>
+                <input type="number" id="year3" step="0.01"
+                       min="0" placeholder="3100.00" required>
             </div>
 
             <div class="input-group">
-                <label for="year4">
-                    4 Years Ago (Lag 4)
-                </label>
-                <input
-                    type="number"
-                    id="year4"
-                    step="0.01"
-                    min="0"
-                    placeholder="2954.50"
-                >
+                <label for="year4">4 Years Ago (Lag 4)</label>
+                <input type="number" id="year4" step="0.01"
+                       min="0" placeholder="2900.00" required>
             </div>
 
             <div class="input-group">
-                <label for="year5">
-                    5 Years Ago (Lag 5)
-                </label>
-                <input
-                    type="number"
-                    id="year5"
-                    step="0.01"
-                    min="0"
-                    placeholder="2460.00"
-                >
+                <label for="year5">5 Years Ago (Lag 5)</label>
+                <input type="number" id="year5" step="0.01"
+                       min="0" placeholder="2700.00" required>
             </div>
 
         </div>
@@ -113,12 +92,15 @@
             <span class="result-label">
                 Predicted Annual Rainfall
             </span>
+
             <div class="prediction-number">
-                <span id="predictionValue">0</span>
+                <span id="predictionValue">0.00</span>
                 <span class="unit">mm</span>
             </div>
+
             <p>
-                Estimated rainfall for the next year
+                Estimated next-year rainfall for
+                <strong id="resultSubdivision"></strong>
             </p>
         </div>
 
@@ -126,33 +108,22 @@
 
     </section>
 
-    <!-- Model Information -->
     <section class="model-section">
-        <h2>Model Information</h2>
+        <h2>About the Model</h2>
         <p class="model-description">
-            The prediction is generated using a Linear Regression
-            model trained on historical rainfall patterns.
+            This application uses a location-aware Linear Regression
+            pipeline trained on historical rainfall patterns and
+            meteorological subdivision information.
         </p>
-
-        <div class="metrics">
-            <div class="metric">
-                <span class="metric-value">211.84</span>
-                <span class="metric-label">MAE (mm)</span>
-            </div>
-            <div class="metric">
-                <span class="metric-value">289.06</span>
-                <span class="metric-label">RMSE (mm)</span>
-            </div>
-            <div class="metric">
-                <span class="metric-value">0.891</span>
-                <span class="metric-label">R² Score</span>
-            </div>
-        </div>
+        <p class="model-description">
+            Predictions are estimates and may differ from actual rainfall.
+            Model performance should be assessed using documented
+            validation and holdout results.
+        </p>
     </section>
 
-    <!-- Footer -->
     <footer>
-        <p>Rainfall Prediction ML Project</p>
+        <p>Regional Rainfall Prediction ML Project</p>
         <p>Built with Python • Scikit-learn • FastAPI</p>
     </footer>
 

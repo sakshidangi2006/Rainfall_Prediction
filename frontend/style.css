@@ -42,6 +42,65 @@ body {
   font-size: 16px;
 }
 
+
+/* Subdivision Selection Section */
+.prediction-card > .input-group {
+    margin-bottom: 28px;
+    padding: 20px;
+    background: #f0f7ff;
+    border: 1px solid #d4e5f7;
+    border-radius: 14px;
+}
+
+/* Subdivision Label */
+#subdivision + small {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.prediction-card > .input-group label[for="subdivision"] {
+    display: block;
+    margin-bottom: 10px;
+    color: #1e3a5f;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Subdivision Dropdown */
+#subdivision {
+    display: block;
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background-color: #ffffff;
+    color: #1e293b;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover Effect */
+#subdivision:hover {
+    border-color: #60a5fa;
+}
+
+/* Focus Effect */
+#subdivision:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Placeholder Option */
+#subdivision:invalid {
+    color: #64748b;
+}
+
 /* Prediction Card & Model Section */
 .prediction-card,
 .model-section {
