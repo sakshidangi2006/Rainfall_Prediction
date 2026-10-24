@@ -1,6 +1,5 @@
 
-const API_URL = "http://127.0.0.1:8000";
-
+const API_URL = "https://rainfall-prediction-ik1i.onrender.com";
 const button = document.getElementById("predictButton");
 const subdivisionSelect = document.getElementById("subdivision");
 const loading = document.getElementById("loading");
